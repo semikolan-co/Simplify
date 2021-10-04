@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/homeScreen.dart';
 
@@ -35,7 +36,8 @@ class _LoginPageState extends State<LoginPage> {
       splashColor: Colors.grey,
       onPressed: () {
         signInWithGoogle().then((result) {
-          if (result != null) {
+          if (FirebaseAuth.instance.currentUser != null) {
+            print(FirebaseAuth.instance.currentUser);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
