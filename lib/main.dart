@@ -1,11 +1,10 @@
-//https://picsum.photos/200/300   //  ⌘ ñ
-//use lint
-//import '../widget/detailscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/homeScreen.dart';
 import 'package:todo/login_screen.dart';
+import 'package:todo/providers/ind_todo_provider.dart';
 
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -22,10 +21,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'homepage',
-      debugShowCheckedModeBanner: false,
-      home: LoginPage(),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<IndToDoProvider>(
+            create: (_) => IndToDoProvider(),
+          )
+        ],
+        child: MaterialApp(
+          title: 'homepage',
+          debugShowCheckedModeBanner: false,
+          home: LoginPage(),
+        ));
   }
 }

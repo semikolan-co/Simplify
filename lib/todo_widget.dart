@@ -1,5 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/providers/ind_todo_provider.dart';
 
 class ToDoWidget extends StatefulWidget {
   final Map data;
@@ -15,6 +17,7 @@ class _ToDoWidgetState extends State<ToDoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final prov = Provider.of<IndToDoProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -42,13 +45,13 @@ class _ToDoWidgetState extends State<ToDoWidget> {
               ),
               IconButton(
                 onPressed: () {
-                  ref
-                      .child('users')
-                      .child('snjd86e46')
-                      .child('todo')
-                      .child(widget.keys)
-                      .remove();
-                  setState(() {});
+                  prov.removeData(widget.keys);
+                  // ref
+                  //     .child('users')
+                  //     .child('snjd86e46')
+                  //     .child('todo')
+                  //     .child(widget.keys)
+                  //     .remove();
                 },
                 icon: Icon(Icons.delete),
                 color: Colors.red,

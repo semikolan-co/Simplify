@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/homeScreen.dart';
 
@@ -10,6 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final databaseRef = FirebaseDatabase.instance.reference();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +40,11 @@ class _LoginPageState extends State<LoginPage> {
         signInWithGoogle().then((result) {
           if (FirebaseAuth.instance.currentUser != null) {
             print(FirebaseAuth.instance.currentUser);
-            Navigator.of(context).push(
+            databaseRef
+                .child('users')
+                .child(FirebaseAuth.instance.currentUser!.uid)
+                .set({'todo': {},'points':0});
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) {
                   return HomeScreen();
@@ -115,6 +121,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 }
