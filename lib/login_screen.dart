@@ -43,14 +43,34 @@ class _LoginPageState extends State<LoginPage> {
             databaseRef
                 .child('users')
                 .child(FirebaseAuth.instance.currentUser!.uid)
-                .set({'todo': {},'points':0});
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) {
-                  return HomeScreen();
-                },
-              ),
-            );
+                .once()
+                .then((DataSnapshot snapshot) {
+              if (snapshot.value == null) {
+                databaseRef
+                    .child('users')
+                    .child(FirebaseAuth.instance.currentUser!.uid)
+                    .set({
+                  'name': FirebaseAuth.instance.currentUser!.displayName,
+                  'email': FirebaseAuth.instance.currentUser!.email,
+                  'photoUrl': FirebaseAuth.instance.currentUser!.photoURL,
+                  'uid': FirebaseAuth.instance.currentUser!.uid,
+                  'todo': null,
+                  'points': 0,
+                });
+              }
+            });
+            // databaseRef
+            //     .child('users')
+            //     .child(FirebaseAuth.instance.currentUser!.uid)
+            //     .set({
+            //   'todo': {},
+            //   'points': 0,
+            //   'name': FirebaseAuth.instance.currentUser!.displayName,
+            //   'email': FirebaseAuth.instance.currentUser!.email,
+            //   'photoUrl': FirebaseAuth.instance.currentUser!.photoURL,
+            // });
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
           }
         });
       },
@@ -63,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Image(image: AssetImage("assets/google_logo.png"), height: 35.0),
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(
@@ -73,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.grey,
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
