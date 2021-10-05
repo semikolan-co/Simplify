@@ -12,20 +12,24 @@ class IndToDoProvider with ChangeNotifier {
 
   Future<void> fetchData() async {
     await databaseRef.once().then((DataSnapshot snapshot) {
-      Map data = snapshot.value['users'][FirebaseAuth.instance.currentUser!.uid]
-                  ['todo'] !=
-              null
-          ? snapshot.value['users'][FirebaseAuth.instance.currentUser!.uid]
-              ['todo']
-          : {};
-      print(data.length);
-      _toDoList = data;
+      try {
+        Map data = snapshot.value['users']
+                    [FirebaseAuth.instance.currentUser!.uid]['todo'] !=
+                null
+            ? snapshot.value['users'][FirebaseAuth.instance.currentUser!.uid]
+                ['todo']
+            : {};
+        print(data.length);
+        _toDoList = data;
+      } catch (e) {
+        print(e);
+        _toDoList = {};
+      }
       // notifyListeners();
-      print(
-          'Data : ${snapshot.value['users'][FirebaseAuth.instance.currentUser!.uid]['todo']}');
+      // print(
+          // 'Data : ${snapshot.value['users'][FirebaseAuth.instance.currentUser!.uid]['todo']}');
     });
     // notifyListeners();
-    return Future.value(null);
   }
 
   Future<void> addTask(Map task) async {

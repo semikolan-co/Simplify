@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/login_screen.dart';
 import 'package:todo/providers/ind_todo_provider.dart';
 import 'package:todo/todo_widget.dart';
 
@@ -20,9 +21,28 @@ class _HomeScreenState extends State<HomeScreen> {
     final prov = Provider.of<IndToDoProvider>(context);
     return DefaultTabController(
       length: 2,
-      initialIndex: 1,
+      initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            InkWell(
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginPage();
+                    },
+                  ),
+                );
+              },
+              child: Chip(
+                label: Text('Log Out'),
+                // shadowColor: Colors.red,
+                // avatar: Icon(Icons.add),
+              ),
+            )
+          ],
           title: Text('To Do'),
           bottom: TabBar(
             labelColor: Colors.white,
@@ -93,13 +113,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: Text('Submit')),
                       Expanded(
-                        child: prov.toDoList.length>=1? ListView.builder(
-                            // itemCount: fbdata.length,
-                            itemCount: prov.toDoList.length,
-                            itemBuilder: (ctx, index) => ToDoWidget(
-                                  prov.toDoList.values.toList()[index],
-                                  prov.toDoList.keys.toList()[index],
-                                )):Text('No To-Do yet'),
+                        child: prov.toDoList.length >= 1
+                            ? ListView.builder(
+                                // itemCount: fbdata.length,
+                                itemCount: prov.toDoList.length,
+                                itemBuilder: (ctx, index) => ToDoWidget(
+                                      prov.toDoList.values.toList()[index],
+                                      prov.toDoList.keys.toList()[index],
+                                    ))
+                            : Text('No To-Do yet'),
                         // fbdata.values.toList()[index],
                         // fbdata.keys.toList()[index])),
                       )
